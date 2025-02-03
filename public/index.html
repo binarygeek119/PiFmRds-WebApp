@@ -1,0 +1,88 @@
+
+---
+
+### **4. `index.html`**
+This is the frontend HTML file for the web interface.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PiFmRds Web Controller</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, button {
+            margin-top: 5px;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>PiFmRds Web Controller</h1>
+    <form id="startForm" enctype="multipart/form-data">
+        <label for="frequency">Frequency (e.g., 87.5):</label>
+        <input type="text" id="frequency" name="frequency" required>
+        <label for="audioFile">Upload Audio File:</label>
+        <input type="file" id="audioFile" name="audioFile" accept=".wav" required>
+        <button type="submit">Start Transmission</button>
+    </form>
+    <button id="stopButton">Stop Transmission</button>
+    <h2>Status:</h2>
+    <pre id="status"></pre>
+
+    <script>
+        const statusElement = document.getElementById('status');
+
+        document.getElementById('startForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const frequency = document.getElementById('frequency').value;
+            const audioFile = document.getElementById('audioFile').files[0];
+
+            const formData = new FormData();
+            formData.append('frequency', frequency);
+            formData.append('audioFile', audioFile);
+
+            fetch('/start', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(message => {
+                statusElement.textContent = message;
+            })
+            .catch(error => {
+                statusElement.textContent = 'Error: ' + error;
+            });
+        });
+
+        document.getElementById('stopButton').addEventListener('click', function() {
+            fetch('/stop', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.text())
+            .then(message => {
+                statusElement.textContent = message;
+            })
+            .catch(error => {
+                statusElement.textContent = 'Error: ' + error;
+            });
+        });
+    </script>
+</body>
+</html>
