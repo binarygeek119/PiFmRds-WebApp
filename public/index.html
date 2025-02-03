@@ -9,11 +9,41 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 200px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            background-color: #f1f1f1;
+            margin-right: 5px;
+        }
+        .tab-button.active {
+            background-color: #fff;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        .tab-content.active {
+            display: block;
+        }
         label {
             display: block;
             margin-top: 10px;
         }
-        input, button {
+        input, button, select {
             margin-top: 5px;
         }
         pre {
@@ -21,87 +51,193 @@
             padding: 10px;
             border: 1px solid #ddd;
         }
-        .progress-container {
-            width: 100%;
-            background-color: #f1f1f1;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-        .progress-bar {
-            width: 0%;
-            height: 20px;
-            background-color: #4caf50;
-            border-radius: 5px;
+        footer {
             text-align: center;
-            line-height: 20px;
-            color: white;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        footer a {
+            color: #666;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <h1>PiFmRds Web Controller</h1>
-    <form id="startForm" enctype="multipart/form-data">
-        <label for="frequency">Frequency (e.g., 87.5):</label>
-        <input type="text" id="frequency" name="frequency" required>
-        <label for="audioFile">Upload Audio File:</label>
-        <input type="file" id="audioFile" name="audioFile" accept=".wav" required>
-        <button type="submit">Start Transmission</button>
-    </form>
-    <div class="progress-container">
-        <div id="progressBar" class="progress-bar">0%</div>
+    <div class="logo">
+        <img src="logo.png" alt="Logo">
     </div>
-    <button id="stopButton">Stop Transmission</button>
+
+    <div class="tabs">
+        <div class="tab-button active" data-tab="upload">Upload</div>
+        <div class="tab-button" data-tab="existing">Existing Files</div>
+        <div class="tab-button" data-tab="scheduler">Scheduler</div>
+    </div>
+
+    <!-- Upload Tab -->
+    <div id="upload" class="tab-content active">
+        <h2>Upload Audio File</h2>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="frequency">Frequency (e.g., 87.5):</label>
+            <input type="text" id="frequency" name="frequency" required>
+            
+            <label for="ps">Program Service (PS, max 8 characters):</label>
+            <input type="text" id="ps" name="ps" maxlength="8" placeholder="Enter PS">
+            
+            <label for="rt">Radio Text (RT, max 64 characters):</label>
+            <input type="text" id="rt" name="rt" maxlength="64" placeholder="Enter RT">
+            
+            <label for="audioFile">Upload Audio File:</label>
+            <input type="file" id="audioFile" name="audioFile" accept=".wav" required>
+            
+            <button type="submit">Start Transmission</button>
+        </form>
+        <button id="stopButton">Stop Transmission</button>
+    </div>
+
+    <!-- Existing Files Tab -->
+    <div id="existing" class="tab-content">
+        <h2>Select Existing File</h2>
+        <form id="existingForm">
+            <label for="frequency2">Frequency (e.g., 87.5):</label>
+            <input type="text" id="frequency2" name="frequency" required>
+            
+            <label for="ps2">Program Service (PS, max 8 characters):</label>
+            <input type="text" id="ps2" name="ps" maxlength="8" placeholder="Enter PS">
+            
+            <label for="rt2">Radio Text (RT, max 64 characters):</label>
+            <input type="text" id="rt2" name="rt" maxlength="64" placeholder="Enter RT">
+            
+            <label for="fileList">Select File:</label>
+            <select id="fileList"></select>
+            
+            <button type="submit">Start Transmission</button>
+        </form>
+        <button id="stopButton2">Stop Transmission</button>
+    </div>
+
+    <!-- Scheduler Tab -->
+    <div id="scheduler" class="tab-content">
+        <h2>Scheduler (Coming Soon)</h2>
+        <p>This feature will allow you to schedule multiple files for playback throughout the day.</p>
+    </div>
+
+    <!-- Shared Status -->
     <h2>Status:</h2>
     <pre id="status"></pre>
 
+    <!-- Footer -->
+    <footer>
+        This software is licensed under the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GPLv3 License</a>.
+        <br>
+        Source code available on <a href="https://github.com/furipaf/PiFmRds-WebApp" target="_blank">GitHub</a>.
+    </footer>
+
     <script>
         const statusElement = document.getElementById('status');
-        const progressBar = document.getElementById('progressBar');
+        const fileListElement = document.getElementById('fileList');
 
-        document.getElementById('startForm').addEventListener('submit', function(event) {
+        // Fetch and display the list of WAV files
+        fetch('/files')
+            .then(response => response.json())
+            .then(files => {
+                files.forEach(file => {
+                    const option = document.createElement('option');
+                    option.value = file;
+                    option.textContent = file;
+                    fileListElement.appendChild(option);
+                });
+            })
+            .catch(error => {
+                statusElement.textContent = 'Error loading file list: ' + error;
+            });
+
+        // Handle tab switching
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                button.classList.add('active');
+                document.getElementById(button.getAttribute('data-tab')).classList.add('active');
+            });
+        });
+
+        // Handle upload form submission
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const frequency = document.getElementById('frequency').value;
+            const ps = document.getElementById('ps').value;
+            const rt = document.getElementById('rt').value;
             const audioFile = document.getElementById('audioFile').files[0];
 
             const formData = new FormData();
             formData.append('frequency', frequency);
+            formData.append('ps', ps);
+            formData.append('rt', rt);
             formData.append('audioFile', audioFile);
 
-            const xhr = new XMLHttpRequest();
-
-            // Track upload progress
-            xhr.upload.addEventListener('progress', function(event) {
-                if (event.lengthComputable) {
-                    const percentComplete = (event.loaded / event.total) * 100;
-                    progressBar.style.width = percentComplete + '%';
-                    progressBar.textContent = Math.round(percentComplete) + '%';
-                }
+            fetch('/start', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(message => {
+                statusElement.textContent = message;
+            })
+            .catch(error => {
+                statusElement.textContent = 'Error: ' + error;
             });
-
-            // Handle upload completion
-            xhr.addEventListener('load', function() {
-                if (xhr.status === 200) {
-                    statusElement.textContent = xhr.responseText;
-                } else {
-                    statusElement.textContent = 'Error: ' + xhr.responseText;
-                }
-                progressBar.style.width = '0%';
-                progressBar.textContent = '0%';
-            });
-
-            // Handle upload errors
-            xhr.addEventListener('error', function() {
-                statusElement.textContent = 'Error: Upload failed';
-                progressBar.style.width = '0%';
-                progressBar.textContent = '0%';
-            });
-
-            // Start the upload
-            xhr.open('POST', '/start', true);
-            xhr.send(formData);
         });
 
+        // Handle existing files form submission
+        document.getElementById('existingForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const frequency = document.getElementById('frequency2').value;
+            const ps = document.getElementById('ps2').value;
+            const rt = document.getElementById('rt2').value;
+            const selectedFile = fileListElement.value;
+
+            const formData = new FormData();
+            formData.append('frequency', frequency);
+            formData.append('ps', ps);
+            formData.append('rt', rt);
+            formData.append('useExistingFile', selectedFile);
+
+            fetch('/start', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(message => {
+                statusElement.textContent = message;
+            })
+            .catch(error => {
+                statusElement.textContent = 'Error: ' + error;
+            });
+        });
+
+        // Handle stop button for upload tab
         document.getElementById('stopButton').addEventListener('click', function() {
+            fetch('/stop', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.text())
+            .then(message => {
+                statusElement.textContent = message;
+            })
+            .catch(error => {
+                statusElement.textContent = 'Error: ' + error;
+            });
+        });
+
+        // Handle stop button for existing files tab
+        document.getElementById('stopButton2').addEventListener('click', function() {
             fetch('/stop', {
                 method: 'POST',
                 headers: {
