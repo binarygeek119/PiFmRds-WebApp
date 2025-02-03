@@ -49,6 +49,10 @@ This will generate an FM transmission on 107.9 MHz, with default station name (P
    ├── README.md               # Documentation
    └── .gitignore              # Git ignore file
 
+## Notes
+1. Dont upload file with same name again, or else delete all the files from /PiFmRds-WebApp/uploads/
+2. More updates are coming so stay tuned, your suggestion to add / delete / enhance features are most welcome Bushra.  
+
 ## Acknowledgments
 
 This project was developed with the assistance of **DeepSeek**, an AI-powered coding assistant. DeepSeek provided guidance, code snippets, and troubleshooting support to help bring this project to life. Special thanks to the DeepSeek team for their invaluable help!
