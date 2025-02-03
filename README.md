@@ -52,8 +52,8 @@ This will generate an FM transmission on 107.9 MHz, with default station name (P
 ## Notes
 1. Dont upload file with same name again, or else delete all the files from /PiFmRds-WebApp/uploads/
 2. More updates are coming so stay tuned, your suggestion to add / delete / enhance features are most welcome.
-3. Playable WAV file format is PCM, 44.1 kHz, Stereo, 16-bit; However, The WebApp will convert other files to required format.
-4. Spaces are not allowed in WAV file name.
+3. Playable WAV file format is PCM, 44.1 kHz, Stereo or Mono, 16-bit - for more supported formats, see the PiFmRds repo. However, The WebApp will convert other files to required format.
+4. Spaces are not allowed in WAV file name nevertheless the WebApp will convert files names automatically.
 5. No need to install "PiFmRds" separately, the install.sh package will install it automatically in the same directory
 6. Dont stop FM Transmission from PuTTy, Use the WebApp buttons to start / stop. "Control + C" to stop FM Transmission from PuTTy.
 
