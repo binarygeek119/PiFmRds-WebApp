@@ -51,7 +51,8 @@ This will generate an FM transmission on 107.9 MHz, with default station name (P
 
 ## Notes
 1. Dont upload file with same name again, or else delete all the files from /PiFmRds-WebApp/uploads/
-2. More updates are coming so stay tuned, your suggestion to add / delete / enhance features are most welcome Bushra.  
+2. More updates are coming so stay tuned, your suggestion to add / delete / enhance features are most welcome Bushra.
+3. Playable WAV file format is PCM, 44.1 kHz, Stereo, 16-bit; However, The WebApp will convert other files to required format.  
 
 ## Acknowledgments
 
