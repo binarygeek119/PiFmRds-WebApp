@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,6 +21,21 @@
             padding: 10px;
             border: 1px solid #ddd;
         }
+        .progress-container {
+            width: 100%;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 20px;
+            background-color: #4caf50;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -33,12 +47,16 @@
         <input type="file" id="audioFile" name="audioFile" accept=".wav" required>
         <button type="submit">Start Transmission</button>
     </form>
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar">0%</div>
+    </div>
     <button id="stopButton">Stop Transmission</button>
     <h2>Status:</h2>
     <pre id="status"></pre>
 
     <script>
         const statusElement = document.getElementById('status');
+        const progressBar = document.getElementById('progressBar');
 
         document.getElementById('startForm').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -49,17 +67,38 @@
             formData.append('frequency', frequency);
             formData.append('audioFile', audioFile);
 
-            fetch('/start', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(message => {
-                statusElement.textContent = message;
-            })
-            .catch(error => {
-                statusElement.textContent = 'Error: ' + error;
+            const xhr = new XMLHttpRequest();
+
+            // Track upload progress
+            xhr.upload.addEventListener('progress', function(event) {
+                if (event.lengthComputable) {
+                    const percentComplete = (event.loaded / event.total) * 100;
+                    progressBar.style.width = percentComplete + '%';
+                    progressBar.textContent = Math.round(percentComplete) + '%';
+                }
             });
+
+            // Handle upload completion
+            xhr.addEventListener('load', function() {
+                if (xhr.status === 200) {
+                    statusElement.textContent = xhr.responseText;
+                } else {
+                    statusElement.textContent = 'Error: ' + xhr.responseText;
+                }
+                progressBar.style.width = '0%';
+                progressBar.textContent = '0%';
+            });
+
+            // Handle upload errors
+            xhr.addEventListener('error', function() {
+                statusElement.textContent = 'Error: Upload failed';
+                progressBar.style.width = '0%';
+                progressBar.textContent = '0%';
+            });
+
+            // Start the upload
+            xhr.open('POST', '/start', true);
+            xhr.send(formData);
         });
 
         document.getElementById('stopButton').addEventListener('click', function() {
