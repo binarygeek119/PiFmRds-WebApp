@@ -1,6 +1,6 @@
-# PiFmRds Web Application
+# PiFmRds Web Application (V3)
 
-This package provides a web interface to control the PiFmRds FM transmission software on a Raspberry Pi OS Lite.
+This package provides a web interface to control the PiFmRds FM transmission software on a Raspberry Pi OS Lite. Version 3 introduces a scheduler feature, allowing you to queue and loop audio files with customizable gaps between them. It also includes improvements to the user interface and error handling.
 
 ## Before Installation
 
@@ -40,6 +40,7 @@ This will generate an FM transmission on 107.9 MHz, with default station name (P
    http://<Raspberry-Pi-IP>:3000
 
 6. Here’s the structure of the package:
+   ---
    ```bash
    PiFmRds-WebApp/
    ├── PiFmRds/                # PiFmRds source code
@@ -51,17 +52,39 @@ This will generate an FM transmission on 107.9 MHz, with default station name (P
    ├── install.sh              # Installation script
    ├── README.md               # Documentation
    └── .gitignore              # Git ignore file
+   ---
+# Features in Version 3
+## 1. Scheduler:
+   - Queue multiple audio files for playback.
+   - Specify custom gaps (in seconds) between files.
+   - Loop the playlist indefinitely until manually stopped.
+   - Set frequency, PS (Program Service), and RT (Radio Text) for the scheduler.
 
----
-## Notes
-1. Dont upload file with same name again, or else delete all the files from /PiFmRds-WebApp/uploads/
-2. More updates are coming so stay tuned, your suggestion to add / delete / enhance features are most welcome.
-3. Playable WAV file formats are:
-   -   PCM, 44.1 kHz, Stereo, 16-bit
-   -   PCM, 44.1 kHz, Mono, 16-bit
-4. Only Alpha-Numerics are allowed in WAV file name. No spaces, No paranthesis, No other characters
-5. No need to install "PiFmRds" separately, the install.sh package will install it automatically in the same directory
-6. Dont stop FM Transmission from PuTTy, Use the WebApp buttons to start / stop. "Control + C" to stop FM Transmission from PuTTy.
+## 2. Improved Error Handling:
+   - Default gap of 3 seconds if no valid input is provided.
+   - Better error messages for invalid inputs.
+
+## 3. User Interface Enhancements:
+   - Added frequency, PS, and RT fields in the scheduler tab.
+   - Updated labels for better clarity (e.g., "Segue (Seconds | Default: 3 Sec)").
+
+## 4. Bug Fixes:
+   - Fixed issues with the scheduler loop causing errors after the playlist ends.
+
+# Notes
+## 1. File Uploads:
+   - Do not upload files with the same name. If needed, delete all files from /PiFmRds-WebApp/uploads/ before uploading.
+## 2. Playable WAV File Formats:
+   - PCM, 44.1 kHz, Stereo, 16-bit
+   - PCM, 44.1 kHz, Mono, 16-bit
+## 3. File Naming:
+   - Only alphanumeric characters are allowed in WAV file names. Avoid spaces, parentheses, or special characters.
+## 4. FM Transmission Control:
+   - Always use the web application buttons to start/stop FM transmission. Avoid using Control + C in PuTTy to stop transmission.
+## 5. Scheduler:
+   - If no gap is specified or the input is invalid, the default gap of 3 seconds will be used.
+   - The scheduler will loop the playlist indefinitely until manually stopped or another schedule is activated.
+
 ---
 
 ## Acknowledgments
@@ -74,9 +97,5 @@ This project was developed with the assistance of **DeepSeek**, an AI-powered co
 
 ## ScreenShot
 
-<p align="center">
-      <img src="https://github.com/user-attachments/assets/6bfb98f8-a25a-46fd-b0b2-e608b026690b" width="31%">
-      <img src="https://github.com/user-attachments/assets/678ebb5d-ecde-4867-a780-d75d8b87bd12" width="31%">
-      <img src="https://github.com/user-attachments/assets/c942ed90-70c1-4acc-907c-0290ae1aae1b" width="31%">  
-</p>
+<p align="center"> <img src="https://github.com/user-attachments/assets/6bfb98f8-a25a-46fd-b0b2-e608b026690b" width="31%"> <img src="https://github.com/user-attachments/assets/678ebb5d-ecde-4867-a780-d75d8b87bd12" width="31%"> <img src="https://github.com/user-attachments/assets/c942ed90-70c1-4acc-907c-0290ae1aae1b" width="31%"> </p>
 
