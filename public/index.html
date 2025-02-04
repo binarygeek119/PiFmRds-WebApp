@@ -64,6 +64,16 @@
         footer a:hover {
             text-decoration: underline;
         }
+        .upload-status {
+            display: none;
+            color: #ff0000;
+            font-weight: bold;
+            animation: flash 1s infinite;
+        }
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -96,6 +106,9 @@
             <button type="submit">Start Transmission</button>
         </form>
         <button id="stopButton">Stop Transmission</button>
+        <div id="uploadStatus" class="upload-status">Upload in progress...</div>
+        <h2>Status:</h2>
+        <pre id="status"></pre>
     </div>
 
     <!-- Existing Files Tab -->
@@ -117,17 +130,35 @@
             <button type="submit">Start Transmission</button>
         </form>
         <button id="stopButton2">Stop Transmission</button>
+        <h2>Status:</h2>
+        <pre id="status2"></pre>
     </div>
 
     <!-- Scheduler Tab -->
     <div id="scheduler" class="tab-content">
-        <h2>Scheduler (Coming Soon)</h2>
-        <p>This feature will allow you to schedule multiple files for playback throughout the day.</p>
+        <h2>Scheduler</h2>
+        <form id="schedulerForm">
+            <label for="frequency3">Frequency (e.g., 87.5):</label>
+            <input type="text" id="frequency3" name="frequency" required>
+            
+            <label for="ps3">Program Service (PS, max 8 characters):</label>
+            <input type="text" id="ps3" name="ps" maxlength="8" placeholder="Enter PS">
+            
+            <label for="rt3">Radio Text (RT, max 64 characters):</label>
+            <input type="text" id="rt3" name="rt" maxlength="64" placeholder="Enter RT">
+            
+            <label for="schedulerFiles">Select Files:</label>
+            <select id="schedulerFiles" multiple></select>
+            
+            <label for="gaps">Segue (Seconds | Default: 3 Sec):</label>
+            <input type="text" id="gaps" placeholder="e.g., 10, 15, 20">
+            
+            <button type="submit">Start Scheduler</button>
+        </form>
+        <button id="stopSchedulerButton">Stop Scheduler</button>
+        <h2>Scheduler Status:</h2>
+        <pre id="schedulerStatus">Idle</pre>
     </div>
-
-    <!-- Shared Status -->
-    <h2>Status:</h2>
-    <pre id="status"></pre>
 
     <!-- Footer -->
     <footer>
@@ -138,7 +169,11 @@
 
     <script>
         const statusElement = document.getElementById('status');
+        const statusElement2 = document.getElementById('status2');
+        const schedulerStatusElement = document.getElementById('schedulerStatus');
         const fileListElement = document.getElementById('fileList');
+        const schedulerFilesElement = document.getElementById('schedulerFiles');
+        const uploadStatusElement = document.getElementById('uploadStatus');
 
         // Fetch and display the list of WAV files
         fetch('/files')
@@ -149,6 +184,7 @@
                     option.value = file;
                     option.textContent = file;
                     fileListElement.appendChild(option);
+                    schedulerFilesElement.appendChild(option.cloneNode(true));
                 });
             })
             .catch(error => {
@@ -173,6 +209,9 @@
             const rt = document.getElementById('rt').value;
             const audioFile = document.getElementById('audioFile').files[0];
 
+            // Show "Upload in progress" text
+            uploadStatusElement.style.display = 'block';
+
             const formData = new FormData();
             formData.append('frequency', frequency);
             formData.append('ps', ps);
@@ -186,9 +225,11 @@
             .then(response => response.text())
             .then(message => {
                 statusElement.textContent = message;
+                uploadStatusElement.style.display = 'none'; // Hide "Upload in progress" text
             })
             .catch(error => {
                 statusElement.textContent = 'Error: ' + error;
+                uploadStatusElement.style.display = 'none'; // Hide "Upload in progress" text
             });
         });
 
@@ -212,10 +253,59 @@
             })
             .then(response => response.text())
             .then(message => {
-                statusElement.textContent = message;
+                statusElement2.textContent = message;
             })
             .catch(error => {
-                statusElement.textContent = 'Error: ' + error;
+                statusElement2.textContent = 'Error: ' + error;
+            });
+        });
+
+        // Handle scheduler form submission
+        document.getElementById('schedulerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const frequency = document.getElementById('frequency3').value;
+            const ps = document.getElementById('ps3').value;
+            const rt = document.getElementById('rt3').value;
+            const selectedFiles = Array.from(schedulerFilesElement.selectedOptions)
+                .map(option => option.value);
+            const gapsInput = document.getElementById('gaps').value;
+            const gaps = gapsInput.split(',').map(Number).map(gap => isNaN(gap) || gap < 0 ? 3 : gap);
+
+            // Ensure gaps array length matches the number of files
+            while (gaps.length < selectedFiles.length - 1) {
+                gaps.push(3); // Default gap of 3 seconds
+            }
+
+            fetch('/scheduler/start', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ frequency, ps, rt, files: selectedFiles, gaps })
+            })
+            .then(response => response.text())
+            .then(message => {
+                schedulerStatusElement.textContent = message;
+            })
+            .catch(error => {
+                schedulerStatusElement.textContent = 'Error: ' + error;
+            });
+        });
+
+        // Handle stop scheduler button
+        document.getElementById('stopSchedulerButton').addEventListener('click', function() {
+            fetch('/scheduler/stop', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.text())
+            .then(message => {
+                schedulerStatusElement.textContent = message;
+            })
+            .catch(error => {
+                schedulerStatusElement.textContent = 'Error: ' + error;
             });
         });
 
@@ -246,10 +336,10 @@
             })
             .then(response => response.text())
             .then(message => {
-                statusElement.textContent = message;
+                statusElement2.textContent = message;
             })
             .catch(error => {
-                statusElement.textContent = 'Error: ' + error;
+                statusElement2.textContent = 'Error: ' + error;
             });
         });
     </script>
