@@ -97,5 +97,5 @@ This project was developed with the assistance of **DeepSeek**, an AI-powered co
 
 ## ScreenShot
 
-<p align="center"> <img src="https://github.com/user-attachments/assets/6bfb98f8-a25a-46fd-b0b2-e608b026690b" width="31%"> <img src="https://github.com/user-attachments/assets/678ebb5d-ecde-4867-a780-d75d8b87bd12" width="31%"> <img src="https://github.com/user-attachments/assets/c942ed90-70c1-4acc-907c-0290ae1aae1b" width="31%"> </p>
+<p align="center"> <img src="https://github.com/user-attachments/assets/6bfb98f8-a25a-46fd-b0b2-e608b026690b" width="31%"> <img src="https://github.com/user-attachments/assets/678ebb5d-ecde-4867-a780-d75d8b87bd12" width="31%"> <img src="https://github.com/user-attachments/assets/f41ce8fb-6023-4503-98f2-883ae3d1a196" width="31%"> </p>
 
