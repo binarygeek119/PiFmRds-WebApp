@@ -2,6 +2,9 @@
 
 This package provides a web interface to control the PiFmRds FM transmission software on a Raspberry Pi OS Lite. Version 3 introduces a scheduler feature, allowing you to queue and loop audio files with customizable gaps between them. It also includes improvements to the user interface and error handling.
 
+## Video Tutorial:
+ https://youtu.be/hmHKN9e0MNk
+
 ## Before Installation
 
 1. Login to SSH using PuTTy and run these commands
