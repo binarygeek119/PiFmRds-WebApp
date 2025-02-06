@@ -6,9 +6,9 @@
 
 This package provides a web interface to control the PiFmRds FM transmission software on a Raspberry Pi OS Lite. The application allows you to upload audio files, schedule playback, and monitor the FM transmission status in real-time.
 
-## Video Tutorial (Installation and Usage)
-
- https://youtu.be/hmHKN9e0MNk
+## Video Tutorials (Installation and Usage)
+- Installation: https://youtu.be/hmHKN9e0MNk
+- Demonstration: https://youtu.be/elIC_mO1Xac
 ---
 
 ## Before Installation
