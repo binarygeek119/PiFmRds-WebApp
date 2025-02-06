@@ -8,7 +8,7 @@ This package provides a web interface to control the PiFmRds FM transmission sof
 
 ## Video Tutorials (Installation and Usage)
 - Installation: https://youtu.be/hmHKN9e0MNk
-- Demonstration: https://youtu.be/elIC_mO1Xac
+- Usage / Demo: https://youtu.be/elIC_mO1Xac
 ---
 
 ## Before Installation
