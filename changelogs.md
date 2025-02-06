@@ -45,6 +45,31 @@ The v3 release introduces the highly anticipated Scheduler Tab, allowing users t
    - Improved UI/UX for better usability.
    - Robust error handling and user feedback.
 ---
+# Features in v4
+
+- **On Air Indicator**: A visual indicator shows whether the FM transmission is active (green) or inactive (red).
+- **Track Information**: Displays detailed metadata for each track, including title, artist, codec, sample rate, duration, and more.
+- **Scheduler**: Schedule multiple tracks with custom gaps between them.
+- **Responsive Design**: The dashboard is optimized for both desktop and mobile devices.
+- **Metadata Storage**: Metadata for all audio files is stored in the `metadata` folder for quick access.
+- **Real-Time Updates**: The dashboard updates every 2 seconds to reflect the latest status.
+---
+## Changelog (v4)
+
+### Added
+- **On Air Indicator**: Visual indicator for FM transmission status.
+- **Track Information Boxes**: Detailed metadata for each track in a fixed-size box.
+- **Responsive Design**: Optimized for mobile and desktop devices.
+- **Metadata Storage**: Metadata is stored in the `metadata` folder for quick access.
+
+### Fixed
+- **Metadata Loading**: Metadata for queued and played tracks is now displayed correctly.
+- **Scheduler Issues**: Improved handling of track transitions and metadata updates.
+
+### Improved
+- **User Interface**: Enhanced dashboard layout and design.
+- **Performance**: Reduced latency in metadata fetching and display.
+---
 # Future Plans:
 1. Expand scheduler functionality with advanced options.
 2. Add support for additional audio formats.
@@ -58,3 +83,21 @@ The v3 release introduces the highly anticipated Scheduler Tab, allowing users t
 - v1: Upload .wav files and start FM transmission with custom settings.
 - v2: Use the Upload and Existing Files tabs for more flexibility.
 - v3: Schedule playback.
+- v4: Live / Real Time Dashboard 
+---
+## Directory Structure
+Here’s the structure of the package:
+
+   ```bash
+   PiFmRds-WebApp/
+   ├── PiFmRds/                # PiFmRds source code
+   ├── public/                 # Web application frontend
+   │   ├── index.html          # Frontend HTML file
+   │   ├── dashboard.html      # Dashboard HTML file
+   │   └── logo.png            # Logo image
+   ├── uploads/                # Uploaded audio files
+   ├── metadata/               # Metadata for audio files
+   ├── server.js               # Backend script
+   ├── install.sh              # Installation script
+   ├── README.md               # Documentation
+   └── .gitignore              # Git ignore file
