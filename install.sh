@@ -33,11 +33,6 @@ sudo chown -R $USER:$USER /home/$USER/PiFmRds-WebApp/uploads
 sudo chown -R $USER:$USER /home/$USER/PiFmRds-WebApp/metadata
 
 echo "================================="
-echo "Installation complete!"
-echo "To start the web application, run:"
-echo "cd /home/$USER/PiFmRds-WebApp"
-echo "node server.js"
-echo "================================="
 echo "                         "
 echo "   __            _       "
 echo "  / _|          (_)      "
@@ -63,4 +58,10 @@ echo "   ├── install.sh              # Installation script      "
 echo "   ├── README.md               # Documentation            "
 echo "   └── .gitignore              # Git ignore file          "
 echo "                           "
+echo "================================="
+GREEN='\033[0;32m'
+echo -e "${GREEN} Installation complete!"
+echo -e "${GREEN} To start the web application, run:"
+echo -e "${GREEN} cd /home/$USER/PiFmRds-WebApp"
+echo -e "${GREEN} node server.js"
 echo "================================="
