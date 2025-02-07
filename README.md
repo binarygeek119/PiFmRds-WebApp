@@ -37,7 +37,7 @@ This package provides a web interface to control the PiFmRds FM transmission sof
    ./install.sh
    ```
 
-3. Test the FM Transmission by running:
+3. Test the FM Transmission by running (optional):
    ```bash
    cd PiFmRds/src
    sudo ./pi_fm_rds
@@ -106,6 +106,11 @@ PiFmRds-WebApp/
    - Metadata for all tracks is stored in the `metadata` folder and deleted when the scheduler stops.
 
 4. **Dashboard**:
+   - Please change the following line manually in **"dashboard.html"** (/PiFmRds-WebApp/public/dashboard.html), if **Hardware & Software Status** Tab is giving error:
+   - ```bash
+      http://localhost:19999
+      to
+      http://<Raspberry-Pi-IP>:19999
    - The dashboard is fully responsive and works on both desktop and mobile devices.
    - Track information is displayed in a fixed-size box with scrolling text for long titles and artist names.
 
