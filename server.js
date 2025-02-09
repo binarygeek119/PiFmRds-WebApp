@@ -365,5 +365,5 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Start the server
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Web application running on http://localhost:${PORT}`);
+    console.log(`Web application running on http://<your-raspberry-pi-ip>:${PORT}`);
 });
