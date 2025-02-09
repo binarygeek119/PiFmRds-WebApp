@@ -1,14 +1,44 @@
-const express = require('express');
+const express = require('express'); 
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
-
+const os = require('os');
 const app = express();
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Function to get the local IP address
+function getLocalIP() {
+    const interfaces = os.networkInterfaces();
+    for (const iface of Object.values(interfaces)) {
+        for (const details of iface) {
+            if (details.family === 'IPv4' && !details.internal) {
+                return details.address;
+            }
+        }
+    }
+    return '127.0.0.1'; // Fallback to localhost
+}
+
+// Function to update dashboard.html with the correct IP
+function updateDashboardIP() {
+    const dashboardPath = path.join(__dirname, 'public', 'dashboard.html');
+    if (fs.existsSync(dashboardPath)) {
+        let content = fs.readFileSync(dashboardPath, 'utf8');
+        const newIP = getLocalIP();
+        const updatedContent = content.replace(/iframe src=\"http:\/\/.*?\//, `iframe src=\"http://${newIP}/`);
+        fs.writeFileSync(dashboardPath, updatedContent, 'utf8');
+        console.log(`Updated dashboard.html with IP: ${newIP}`);
+    } else {
+        console.log('dashboard.html not found, skipping update.');
+    }
+}
+
+// Update the IP in dashboard.html when the server starts
+updateDashboardIP();
 
 // Create metadata folder if it doesn't exist
 const metadataDir = path.join(__dirname, 'metadata');
@@ -365,5 +395,5 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Start the server
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Web application running on http://<your-raspberry-pi-ip>:${PORT}`);
+    console.log(`Web application running on http://${getLocalIP()}:${PORT}`);
 });
