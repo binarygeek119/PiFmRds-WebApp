@@ -108,9 +108,9 @@ PiFmRds-WebApp/
 4. **Dashboard**:
    - Please change the following line manually in **"dashboard.html"** (/PiFmRds-WebApp/public/dashboard.html), if **Hardware & Software Status** Tab is giving error:
    - ```bash
-      http://localhost:19999
+      http://localhost
       to
-      http://<Raspberry-Pi-IP>:19999
+      http://<Raspberry-Pi-IP>
    - The dashboard is fully responsive and works on both desktop and mobile devices.
    - Track information is displayed in a fixed-size box with scrolling text for long titles and artist names.
 
