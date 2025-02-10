@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PiFmRds Web Controller</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 200px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            background-color: #f1f1f1;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+            flex: 1;
+            text-align: center;
+        }
+        .tab-button.active {
+            background-color: #fff;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 0 5px 5px 5px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .dashboard-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .dashboard-card h3 {
+            margin-top: 0;
+        }
+        .on-air-indicator {
+            background-color: red;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        .on-air-indicator.on {
+            background-color: green;
+        }
+        .track-columns {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .track-column {
+            flex: 1;
+            min-width: 250px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .track-column h3 {
+            margin-top: 0;
+        }
+        .track-box {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            height: 150px; /* Fixed height for all boxes */
+            overflow: hidden;
+        }
+        .track-box .title {
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .track-box .artist {
+            font-size: 1em;
+            text-align: center;
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .track-box .details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        .track-box .details span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        @media (max-width: 768px) {
+            .track-columns {
+                flex-direction: column;
+            }
+            .tab-button {
+                flex: 1 1 100%;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+
+    <div class="tabs">
+        <div class="tab-button active" data-tab="fm-status">FM Transmitter Status</div>
+        <div class="tab-button" data-tab="hardware-status">Hardware & Software Status</div>
+        <div class="tab-button" data-tab="track-info">Track Information</div>
+    </div>
+
+    <!-- FM Transmitter Status Tab -->
+    <div id="fm-status" class="tab-content active">
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div id="on-air-indicator" class="on-air-indicator">Off Air</div>
+            </div>
+            <div class="dashboard-card">
+                <h3>Frequency</h3>
+                <p id="frequency">N/A</p>
+            </div>
+            <div class="dashboard-card">
+                <h3>Radio Text (RT)</h3>
+                <p id="rt">N/A</p>
+            </div>
+            <div class="dashboard-card">
+                <h3>Program Service (PS)</h3>
+                <p id="ps">N/A</p>
+            </div>
+            <div class="dashboard-card">
+                <h3>Played Tracks</h3>
+                <p id="played-tracks">0</p>
+            </div>
+            <div class="dashboard-card">
+                <h3>Queued Tracks</h3>
+                <p id="queued-tracks">0</p>
+            </div>
+            <div class="dashboard-card">
+                <h3>Total Played Duration</h3>
+                <p id="total-played-duration">0 seconds</p>
+            </div>
+            <div class="dashboard-card">
+                <h3>Total Remaining Duration</h3>
+                <p id="total-remaining-duration">0 seconds</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hardware & Software Status Tab -->
+    <div id="hardware-status" class="tab-content">
+        <iframe src="http://192.168.0.11" style="width:100%; height:600px; border:none;"></iframe>
+    </div>
+
+    <!-- Track Information Tab -->
+    <div id="track-info" class="tab-content">
+        <div class="track-columns">
+            <div class="track-column">
+                <h3>Queued Tracks</h3>
+                <div id="queued-track-list"></div>
+            </div>
+            <div class="track-column">
+                <h3>Currently Playing</h3>
+                <div id="current-track">
+                    <p>No track playing</p>
+                </div>
+            </div>
+            <div class="track-column">
+                <h3>Played Tracks</h3>
+                <div id="played-track-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fetch dashboard data and update the UI
+        function updateDashboard() {
+            fetch('/dashboard-data')
+                .then(response => response.json())
+                .then(data => {
+                    // Update the dashboard with the fetched data
+                    document.getElementById('frequency').textContent = data.frequency || 'N/A';
+                    document.getElementById('rt').textContent = data.rt || 'N/A';
+                    document.getElementById('ps').textContent = data.ps || 'N/A';
+                    document.getElementById('played-tracks').textContent = data.playedTracks || 0;
+                    document.getElementById('queued-tracks').textContent = data.queuedTracks || 0;
+                    document.getElementById('total-played-duration').textContent = data.totalPlayedDuration || '0 seconds';
+                    document.getElementById('total-remaining-duration').textContent = data.totalRemainingDuration || '0 seconds';
+
+                    // Update the "On Air" indicator
+                    const onAirIndicator = document.getElementById('on-air-indicator');
+                    if (data.isSchedulerRunning) {
+                        onAirIndicator.textContent = 'On Air';
+                        onAirIndicator.classList.add('on');
+                    } else {
+                        onAirIndicator.textContent = 'Off Air';
+                        onAirIndicator.classList.remove('on');
+                    }
+
+                    // Update the currently playing track
+                    const currentTrack = data.currentTrack;
+                    const currentTrackElement = document.getElementById('current-track');
+                    if (currentTrack.metadata) {
+                        const metadata = currentTrack.metadata;
+                        currentTrackElement.innerHTML = `
+                            <div class="track-box">
+                                <div class="title">${currentTrack.name}</div>
+                                <div class="artist">${metadata.format.tags?.title || 'N/A'}</div>
+                                <div class="details">
+                                    <span>${metadata.streams[0].codec_name}</span>
+                                    <span>${metadata.streams[0].sample_rate} Hz</span>
+                                    <span>${metadata.streams[0].channels} ch</span>
+                                </div>
+                                <div class="details">
+                                    <span>${metadata.streams[0].bits_per_sample} bits</span>
+                                    <span>${metadata.format.duration ? metadata.format.duration.toFixed(2) : 'N/A'} sec</span>
+                                    <span>${metadata.format.bit_rate} bps</span>
+                                </div>
+                                <div class="details">
+                                    <span>${metadata.format.format_name}</span>
+                                    <span>${(metadata.format.size / 1024 / 1024).toFixed(2)} MB</span>
+                                    <span>${metadata.format.tags?.date || 'N/A'}</span>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        currentTrackElement.innerHTML = `<p>No track playing</p>`;
+                    }
+
+                    // Update queued tracks list
+                    const queuedTrackListElement = document.getElementById('queued-track-list');
+                    queuedTrackListElement.innerHTML = data.queuedTracksList
+                        .filter(file => file !== currentTrack.name) // Exclude currently playing track
+                        .map(file => `
+                            <div class="track-box">
+                                <div class="title">${file}</div>
+                                <div class="artist">Loading metadata...</div>
+                            </div>
+                        `).join('');
+
+                    // Fetch metadata for queued tracks
+                    data.queuedTracksList.forEach(file => {
+                        if (file !== currentTrack.name) { // Exclude currently playing track
+                            fetch(`/metadata/${file}.json`)
+                                .then(response => response.json())
+                                .then(metadata => {
+                                    const trackBox = queuedTrackListElement.querySelector(`.track-box .title:contains('${file}')`).parentElement;
+                                    if (trackBox) {
+                                        trackBox.innerHTML = `
+                                            <div class="title">${file}</div>
+                                            <div class="artist">${metadata.format.tags?.title || 'N/A'}</div>
+                                            <div class="details">
+                                                <span>${metadata.streams[0].codec_name}</span>
+                                                <span>${metadata.streams[0].sample_rate} Hz</span>
+                                                <span>${metadata.streams[0].channels} ch</span>
+                                            </div>
+                                            <div class="details">
+                                                <span>${metadata.streams[0].bits_per_sample} bits</span>
+                                                <span>${metadata.format.duration ? metadata.format.duration.toFixed(2) : 'N/A'} sec</span>
+                                                <span>${metadata.format.bit_rate} bps</span>
+                                            </div>
+                                            <div class="details">
+                                                <span>${metadata.format.format_name}</span>
+                                                <span>${(metadata.format.size / 1024 / 1024).toFixed(2)} MB</span>
+                                                <span>${metadata.format.tags?.date || 'N/A'}</span>
+                                            </div>
+                                        `;
+                                    }
+                                })
+                                .catch(() => {
+                                    const trackBox = queuedTrackListElement.querySelector(`.track-box .title:contains('${file}')`).parentElement;
+                                    if (trackBox) {
+                                        trackBox.innerHTML = `
+                                            <div class="title">${file}</div>
+                                            <div class="artist">Metadata not available</div>
+                                        `;
+                                    }
+                                });
+                        }
+                    });
+
+                    // Update played tracks list
+                    const playedTrackListElement = document.getElementById('played-track-list');
+                    playedTrackListElement.innerHTML = data.playedTracksList.map(file => `
+                        <div class="track-box">
+                            <div class="title">${file}</div>
+                            <div class="artist">Loading metadata...</div>
+                        </div>
+                    `).join('');
+
+                    // Fetch metadata for played tracks
+                    data.playedTracksList.forEach(file => {
+                        fetch(`/metadata/${file}.json`)
+                            .then(response => response.json())
+                            .then(metadata => {
+                                const trackBox = playedTrackListElement.querySelector(`.track-box .title:contains('${file}')`).parentElement;
+                                if (trackBox) {
+                                    trackBox.innerHTML = `
+                                        <div class="title">${file}</div>
+                                        <div class="artist">${metadata.format.tags?.title || 'N/A'}</div>
+                                        <div class="details">
+                                            <span>${metadata.streams[0].codec_name}</span>
+                                            <span>${metadata.streams[0].sample_rate} Hz</span>
+                                            <span>${metadata.streams[0].channels} ch</span>
+                                        </div>
+                                        <div class="details">
+                                            <span>${metadata.streams[0].bits_per_sample} bits</span>
+                                            <span>${metadata.format.duration ? metadata.format.duration.toFixed(2) : 'N/A'} sec</span>
+                                            <span>${metadata.format.bit_rate} bps</span>
+                                        </div>
+                                        <div class="details">
+                                            <span>${metadata.format.format_name}</span>
+                                            <span>${(metadata.format.size / 1024 / 1024).toFixed(2)} MB</span>
+                                            <span>${metadata.format.tags?.date || 'N/A'}</span>
+                                        </div>
+                                    `;
+                                }
+                            })
+                            .catch(() => {
+                                const trackBox = playedTrackListElement.querySelector(`.track-box .title:contains('${file}')`).parentElement;
+                                if (trackBox) {
+                                    trackBox.innerHTML = `
+                                        <div class="title">${file}</div>
+                                        <div class="artist">Metadata not available</div>
+                                    `;
+                                }
+                            });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching dashboard data:', error);
+                });
+        }
+
+        // Update dashboard every 2 seconds
+        setInterval(updateDashboard, 2000);
+
+        // Initial update
+        updateDashboard();
+
+        // Handle tab switching
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                button.classList.add('active');
+                document.getElementById(button.getAttribute('data-tab')).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
