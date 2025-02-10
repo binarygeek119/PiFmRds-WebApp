@@ -147,5 +147,6 @@ This project was developed with the assistance of **DeepSeek**, an AI-powered co
 
 ## DashBoard
 ![dashboard](https://github.com/user-attachments/assets/6bce7db7-4f9b-412e-be54-632f3be8e81c)
+![esm-web](https://github.com/user-attachments/assets/d364450f-5569-435e-aff9-a7012bdb3b7e)
 
 ---
