@@ -22,6 +22,9 @@ echo "Ensuring pipx is ready..."
 pipx ensurepath
 export PATH="${HOME}/.local/bin:$PATH"
 
+# Remove default index.html
+rm /var/www/html/index.html
+
 # Install gdown using pipx if not already installed
 if ! command -v gdown &> /dev/null; then
     echo "Installing gdown using pipx..."
@@ -137,4 +140,4 @@ echo -e "${GREEN} cd /home/$USER/PiFmRds-WebApp"
 echo -e "${GREEN} node server.js"
 echo -e "${GREEN} Access from browser => http://<your-raspberry-pi-ip>:3000"
 echo "================================="
-excho "Cleaning Up ...." && sleep 30
+echo "Cleaning Up ...." && sleep 30
