@@ -79,15 +79,6 @@ echo "To customize settings, edit: $INSTALL_DIR/conf/esm.config.json"
 echo "Cleaning up..."
 rm "$FILE_NAME"
 
-# Ensure Node.js and npm are up to date
-sudo npm install -g n
-sudo n stable
-sudo npm install -g npm@latest
-
-# Install Node.js dependencies
-cd /home/$USER/PiFmRds-WebApp
-npm install express body-parser multer fluent-ffmpeg
-
 echo " Here is the Installed Directory Structure "
 echo "                                 "
 echo "   PiFmRds-WebApp/               "
