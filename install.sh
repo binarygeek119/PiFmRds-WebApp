@@ -90,7 +90,7 @@ npm install express body-parser multer fluent-ffmpeg
 
 # Clone PiFmRds Repository
 if [ ! -d "PiFmRds" ]; then
-    git clone https://github.com/ChristopheJacquet/PiFmRds.git
+    git clone https://github.com/binarygeek119/PiFmRds
 fi
 
 # Build PiFmRds
