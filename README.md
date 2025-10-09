@@ -3,6 +3,10 @@
 
 # PiFmRds Web Application | Realtime Playback Monitoring | Live Hardware Health Monitoring (v4)
 
+edited to run on raspberry pi 3 and raspberry pi zero 2 only
+this edit was made for the pi zero 2
+also fixed typo in install
+
 This package provides a web interface to control the PiFmRds FM transmission software on a Raspberry Pi OS Lite. The application allows you to upload audio files, schedule playback, and monitor the FM transmission status in real-time. New feature for Live / Realtime Monitoring of Hardware Health has been added. 
 
 ## Video Tutorials (Installation and Usage)
@@ -150,4 +154,5 @@ This project was developed with the assistance of **DeepSeek**, an AI-powered co
 ![esm-web](https://github.com/user-attachments/assets/d364450f-5569-435e-aff9-a7012bdb3b7e)
 
 ---
+
 
