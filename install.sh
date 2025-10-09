@@ -88,24 +88,6 @@ sudo npm install -g npm@latest
 cd /home/$USER/PiFmRds-WebApp
 npm install express body-parser multer fluent-ffmpeg
 
-# Clone PiFmRds Repository
-if [ ! -d "PiFmRds" ]; then
-    git clone https://github.com/binarygeek119/PiFmRds
-fi
-
-# Build PiFmRds
-cd PiFmRds/src
-make clean
-make
-
-# Create necessary directories
-mkdir -p /home/$USER/PiFmRds-WebApp/uploads
-mkdir -p /home/$USER/PiFmRds-WebApp/metadata
-
-# Set permissions for the uploads and metadata directories
-sudo chown -R $USER:$USER /home/$USER/PiFmRds-WebApp/uploads
-sudo chown -R $USER:$USER /home/$USER/PiFmRds-WebApp/metadata
-
 echo " Here is the Installed Directory Structure "
 echo "                                 "
 echo "   PiFmRds-WebApp/               "
