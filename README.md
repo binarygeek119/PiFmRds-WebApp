@@ -26,7 +26,7 @@ This package provides a web interface to control the PiFmRds FM transmission sof
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/furipaf/PiFmRds-WebApp.git
+   git clone https://github.com/binarygeek119/PiFmRds-WebApp.git
    cd PiFmRds-WebApp
    ```
 
@@ -150,3 +150,4 @@ This project was developed with the assistance of **DeepSeek**, an AI-powered co
 ![esm-web](https://github.com/user-attachments/assets/d364450f-5569-435e-aff9-a7012bdb3b7e)
 
 ---
+
